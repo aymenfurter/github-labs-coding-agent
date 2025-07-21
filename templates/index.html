@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="todo-app">
+    <!-- Add Todo Form -->
+    <div class="add-todo-section">
+        <h2>Add New Todo</h2>
+        <form id="todo-form" action="/add" method="POST" class="todo-form">
+            <div class="form-group">
+                <label for="title">Title *</label>
+                <input type="text" id="title" name="title" required placeholder="Enter todo title..." maxlength="200">
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Enter description (optional)..." maxlength="1000"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Todo
+            </button>
+        </form>
+    </div>
+
+    <!-- Todo Statistics -->
+    <div class="stats">
+        <div class="stat-item">
+            <span class="stat-number">{{ todos|length }}</span>
+            <span class="stat-label">Total</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ todos|selectattr('completed', 'equalto', false)|list|length }}</span>
+            <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ todos|selectattr('completed', 'equalto', true)|list|length }}</span>
+            <span class="stat-label">Completed</span>
+        </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="pending">Pending</button>
+        <button class="filter-btn" data-filter="completed">Completed</button>
+        <button class="filter-btn" data-filter="high">High Priority</button>
+    </div>
+
+    <!-- Todo List -->
+    <div class="todo-list">
+        <h2>Your Todos</h2>
+        {% if todos %}
+            {% for todo in todos %}
+            <div class="todo-item {{ 'completed' if todo.completed else '' }} priority-{{ todo.priority }}" data-priority="{{ todo.priority }}" data-status="{{ 'completed' if todo.completed else 'pending' }}">
+                <div class="todo-content">
+                    <div class="todo-header">
+                        <h3 class="todo-title {{ 'completed' if todo.completed else '' }}">
+                            {{ todo.title|e }}
+                        </h3>
+                        <span class="priority-badge priority-{{ todo.priority }}">
+                            {{ todo.priority.title() }}
+                        </span>
+                    </div>
+                    {% if todo.description %}
+                    <p class="todo-description">{{ todo.description|e }}</p>
+                    {% endif %}
+                    <small class="todo-date">
+                        Created: {{ todo.created_at[:10] }}
+                    </small>
+                </div>
+                
+                <div class="todo-actions">
+                    <a href="/toggle/{{ todo.id }}" class="btn btn-toggle" title="{{ 'Mark as incomplete' if todo.completed else 'Mark as complete' }}">
+                        <i class="fas {{ 'fa-undo' if todo.completed else 'fa-check' }}"></i>
+                    </a>
+                    <button class="btn btn-edit" onclick="editTodo({{ todo.id }}, '{{ todo.title|e|replace("'", "\\'") }}', '{{ todo.description|e|replace("'", "\\'") }}', '{{ todo.priority }}')" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <a href="/delete/{{ todo.id }}" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this todo?')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>No todos yet!</h3>
+                <p>Add your first todo using the form above.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Edit Todo Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Todo</h3>
+            <span class="close">&times;</span>
+        </div>
+        <form id="editForm">
+            <div class="form-group">
+                <label for="editTitle">Title *</label>
+                <input type="text" id="editTitle" required maxlength="200">
+            </div>
+            <div class="form-group">
+                <label for="editDescription">Description</label>
+                <textarea id="editDescription" maxlength="1000"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editPriority">Priority</label>
+                <select id="editPriority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update Todo</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
