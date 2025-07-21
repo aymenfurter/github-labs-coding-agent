@@ -19,7 +19,7 @@
     --text-primary: #1e293b;
     --text-secondary: #64748b;
     --text-muted: #94a3b8;
-    --text-white: #5c5c5c;
+    --text-white: #ffffff;
     
     /* Border Colors */
     --border-light: #e2e8f0;
@@ -174,6 +174,12 @@ main {
     font-family: inherit;
     transition: all var(--transition-fast);
     background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--text-muted);
 }
 
 .form-group input:focus,
