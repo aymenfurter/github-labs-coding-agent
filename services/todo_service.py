@@ -56,6 +56,10 @@ class TodoService:
         """Get all todos as dictionaries."""
         return [todo.to_dict() for todo in self.todos]
     
+    def get_all_todo_objects(self) -> List[TodoModel]:
+        """Get all todos as TodoModel objects."""
+        return self.todos
+    
     def find_todo_by_id(self, todo_id: int) -> Optional[TodoModel]:
         """Find todo by ID."""
         return next((todo for todo in self.todos if todo.id == todo_id), None)

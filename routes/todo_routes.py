@@ -14,7 +14,7 @@ todo_bp = Blueprint('todo', __name__)
 @todo_bp.route('/')
 def index():
     """Main page displaying all todos."""
-    todos = todo_service.get_all_todos()
+    todos = todo_service.get_all_todo_objects()
     return render_template('index.html', todos=todos)
 
 

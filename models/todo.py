@@ -51,8 +51,10 @@ def validate_todo_data(data: Dict, is_update: bool = False) -> List[str]:
     """Validate todo data and return list of errors."""
     errors = []
     
-    if not is_update and (not data or 'title' not in data):
-        errors.append('Title is required')
+    # Check if title is required and present
+    if not is_update:
+        if not data or 'title' not in data or not data.get('title', '').strip():
+            errors.append('Title is required')
     
     title = data.get('title', '').strip()
     if title and len(title) > MAX_TITLE_LENGTH:
