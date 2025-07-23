@@ -1,0 +1,13 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "Test the improved contrast",
+      "description": "This todo item helps verify that the contrast improvements work across all UI elements including buttons, text, and form inputs.",
+      "completed": true,
+      "created_at": "2025-07-23T07:54:59.914812",
+      "priority": "high"
+    }
+  ],
+  "next_id": 2
+}
