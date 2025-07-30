@@ -54,16 +54,17 @@ def validate_todo_data(data: Dict, is_update: bool = False) -> List[str]:
     if not is_update and (not data or 'title' not in data):
         errors.append('Title is required')
     
-    title = data.get('title', '').strip()
-    if title and len(title) > MAX_TITLE_LENGTH:
-        errors.append(f'Title must be {MAX_TITLE_LENGTH} characters or less')
-    
-    description = data.get('description', '').strip()
-    if description and len(description) > MAX_DESCRIPTION_LENGTH:
-        errors.append(f'Description must be {MAX_DESCRIPTION_LENGTH} characters or less')
-    
-    priority = data.get('priority', DEFAULT_PRIORITY)
-    if priority not in VALID_PRIORITIES:
-        errors.append(f'Priority must be one of: {", ".join(VALID_PRIORITIES)}')
+    if data:  # Only proceed if data is not None
+        title = data.get('title', '').strip()
+        if title and len(title) > MAX_TITLE_LENGTH:
+            errors.append(f'Title must be {MAX_TITLE_LENGTH} characters or less')
+        
+        description = data.get('description', '').strip()
+        if description and len(description) > MAX_DESCRIPTION_LENGTH:
+            errors.append(f'Description must be {MAX_DESCRIPTION_LENGTH} characters or less')
+        
+        priority = data.get('priority', DEFAULT_PRIORITY)
+        if priority not in VALID_PRIORITIES:
+            errors.append(f'Priority must be one of: {", ".join(VALID_PRIORITIES)}')
     
     return errors
