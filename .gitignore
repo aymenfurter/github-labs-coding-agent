@@ -87,3 +87,6 @@ coverage.xml
 *.tmp
 *.temp
 *.bak
+
+# Todo application data
+todos.json
